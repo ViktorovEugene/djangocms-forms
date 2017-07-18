@@ -21,12 +21,13 @@ class FormFieldInline(admin.StackedInline):
     form = FormFieldInlineForm
     extra = 0
 
-    formfield_overrides = {
-        models.TextField: {
-            'widget': forms.Textarea(
-                attrs={'rows': 4, 'cols': 50})
-        },
-    }
+    # Disable overriding of the HTMLField's widget.
+    # formfield_overrides = {
+    #     models.TextField: {
+    #         'widget': forms.Textarea(
+    #             attrs={'rows': 4, 'cols': 50})
+    #     },
+    # }
 
     def get_fieldsets(self, request, obj=None):
         fields = (

@@ -25,7 +25,14 @@ readme = open('README.rst').read()
 setup(
     name='djangocms-forms',
     version=version,
-    description="""The easiest and most flexible Django CMS Form builder w/ ReCaptcha v2 support!""",
+    description=(
+        "The easiest and most flexible Django CMS Form builder w/ "
+        "ReCaptcha v2 support!\n"
+        "Note: This is the alternative version with altered description "
+        "fields, to make these editable with the CKEditor.\n"
+        "alt_url: https://git.anvileight.com/eugene.viktorov/djangocms-forms.git\n"
+        "alt_author: eugene.viktorov@anvileight.com"
+    ),
     long_description=readme,
     author='Mishbah Razzaque',
     author_email='mishbahx@gmail.com',
@@ -43,6 +50,7 @@ setup(
         'hashids',
         'requests',
         'django-cms>=3.0',
+        'djangocms-text-ckeditor',
     ],
     license="BSD",
     zip_safe=False,

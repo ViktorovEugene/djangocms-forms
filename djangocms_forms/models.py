@@ -13,6 +13,7 @@ from cms.models import CMSPlugin
 from cms.models.fields import PageField
 from jsonfield import JSONField
 from unidecode import unidecode
+from djangocms_text_ckeditor.fields import HTMLField
 
 from .conf import settings
 from .fields import PluginReferenceField
@@ -39,7 +40,7 @@ class FormDefinition(CMSPlugin):
     name = models.CharField(_('Form Name'), max_length=255)
 
     title = models.CharField(_('Title'), max_length=150, blank=True)
-    description = models.TextField(_('Description'), blank=True)
+    description = HTMLField(_('Description'), blank=True)
     submit_btn_txt = models.CharField(
         _('Submit Button Text'), max_length=100, default=_('Submit'),
         help_text=_('Text for the Submit Button. The default is \'Submit\''))
@@ -137,7 +138,7 @@ class FormField(models.Model):
     field_name = models.CharField(_('Custom Field Name'), max_length=255, blank=True)
     placeholder_text = models.CharField(_('Placeholder Text'), blank=True, max_length=100)
     required = models.BooleanField(_('Required'), default=True)
-    help_text = models.TextField(
+    help_text = HTMLField(
         _('Description'), blank=True,
         help_text=_('A description / instructions for this field.'))
     initial = models.CharField(_('Default Value'), max_length=255, blank=True)
