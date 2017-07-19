@@ -1,5 +1,15 @@
 {% load i18n l10n admin_static cms_static %}
 
+{% block extrastyle %}
+<link rel="stylesheet" href="{% static "djangocms_text_ckeditor/css/cms.ckeditor.css" %}" />
+{% endblock %}
+
+{% block extrahead %}
+<script>window.CKEDITOR_BASEPATH = "{{ CKEDITOR_BASEPATH }}";</script>
+<script src="{% static_with_version "cms/js/dist/bundle.admin.base.min.js" %}"></script>
+<script src="{% static "djangocms_text_ckeditor/js/dist/bundle-efc67163cf.cms.ckeditor.min.js" %}"></script>
+{% endblock %}
+
 <script>
 (function($) {
 // CMS.$ will be passed for $
@@ -56,15 +66,41 @@ $(document).ready(function () {
         }
     }
 
-    //initialize ckeditor when a collapsed row is extended
-    $("#{{ ckeditor_selector }}").closest(".inline-related").find("a.collapse-expand").click(function(e) {
-        var $this = $(this);
-        if (!$this.closest("fieldset").hasClass("collapsed") && $this.data('isInitCMSCKEditor_{{ ckeditor_selector }}') != 'yes') {
+    // initialize ckeditor only if the container exists and is ready
+    setTimeout(initCMSCKEditor{{ ckeditor_function }}, 0);
+    
+    function initCollapsed(button) {
+        var $button = $(button);
+        if (!$button.closest("fieldset").hasClass("collapsed") && $button.data('isInitCMSCKEditor_{{ ckeditor_selector }}') != 'yes') {
             // Show
             initCMSCKEditor{{ ckeditor_function }}();
-            $this.data('isInitCMSCKEditor_{{ ckeditor_selector }}', 'yes');
+            $button.data('isInitCMSCKEditor_{{ ckeditor_selector }}', 'yes');
         }
+    }
+
+    function initCollapsedFormField() {
+        $(".inline-related").find("a.collapse-expand").click(function(e) {
+            initCollapsed(this)
+        });
+    }
+
+    // initialize ckeditor in admin inline for "add-row" link
+    var addButtons{{ ckeditor_function }} = $('.add-row a');
+    if (addButtons{{ ckeditor_function }}.length > 0) {
+        if (addButtons{{ ckeditor_function }}.data('isInitCMSCKEditor') !== 'yes') {
+
+            addButtons{{ ckeditor_function }}.click(function () {
+                initCMSCKEditor{{ ckeditor_function }}();
+                initCollapsedFormField();
+            });
+            addButtons{{ ckeditor_function }}.data('isInitCMSCKEditor', 'yes');
+        }
+    }
+    //initialize ckeditor when a collapsed row is extended
+    $("#{{ ckeditor_selector }}").closest("fieldset.collapse").find("a.collapse-toggle").click(function(e) {
+        initCollapsed(this)
     });
+    initCollapsedFormField();
 });
 })(CMS.$);
 </script>

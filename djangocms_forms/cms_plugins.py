@@ -30,7 +30,7 @@ class FormFieldInline(admin.StackedInline):
                 attrs={'rows': 4, 'cols': 50})
         },
         HTMLField: {
-            'widget': TextEditorWidgetFormField
+            'widget': TextEditorWidgetFormField(no_additions=True)
         },
     }
 
@@ -74,6 +74,13 @@ class FormPlugin(CMSPluginBase):
     form = FormDefinitionAdminForm
     inlines = (FormFieldInline, )
     render_template = settings.DJANGOCMS_FORMS_DEFAULT_TEMPLATE
+
+    # Override the default widgets.
+    formfield_overrides = {
+        HTMLField: {
+            'widget': TextEditorWidgetFormField
+        },
+    }
 
     def get_fieldsets(self, request, obj=None):
         if settings.DJANGOCMS_FORMS_FIELDSETS:
