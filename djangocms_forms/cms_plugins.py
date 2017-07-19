@@ -10,10 +10,12 @@ from django.utils.translation import ugettext_lazy as _
 
 from cms.plugin_base import CMSPluginBase
 from cms.plugin_pool import plugin_pool
+from djangocms_text_ckeditor.fields import HTMLField
 
 from .conf import settings
 from .forms import FormBuilder, FormDefinitionAdminForm, FormFieldInlineForm
 from .models import FormDefinition, FormField
+from .widgets import TextEditorWidgetFormField
 
 
 class FormFieldInline(admin.StackedInline):
@@ -21,13 +23,16 @@ class FormFieldInline(admin.StackedInline):
     form = FormFieldInlineForm
     extra = 0
 
-    # Disable overriding of the HTMLField's widget.
-    # formfield_overrides = {
-    #     models.TextField: {
-    #         'widget': forms.Textarea(
-    #             attrs={'rows': 4, 'cols': 50})
-    #     },
-    # }
+    # Override the default widgets.
+    formfield_overrides = {
+        models.TextField: {
+            'widget': forms.Textarea(
+                attrs={'rows': 4, 'cols': 50})
+        },
+        HTMLField: {
+            'widget': TextEditorWidgetFormField
+        },
+    }
 
     def get_fieldsets(self, request, obj=None):
         fields = (
